@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gaming Sensitivity Converter - Perfect Cross-Game DPI Matching</title>
+    <meta name="description" content="Convert your gaming mouse sensitivity between games instantly. Perfect DPI matching for FPS games like Valorant, CS2, Fortnite, and Apex Legends.">
+    <meta name="keywords" content="gaming sensitivity converter, DPI converter, mouse sensitivity, Valorant sensitivity, CS2 sensitivity, Fortnite DPI">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Gaming Sensitivity Converter - Perfect Cross-Game DPI Matching">
+    <meta property="og:description" content="Convert your gaming mouse sensitivity between games instantly. Perfect DPI matching for FPS games.">
+    <meta property="og:url" content="https://yoursite.com">
+    
+    <!-- Google AdSense Placeholder -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-YOUR-ID"
+     crossorigin="anonymous"></script>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'stealth-bg': '#0a0a0a',
+                        'stealth-card': '#1a1a1a',
+                        'neon-cyan': '#00f5ff',
+                        'neon-purple': '#8b5cf6',
+                        'neon-green': '#10b981'
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body class="bg-stealth-bg text-white overflow-x-hidden">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef, useCallback } = React;
+
+        const GamingSensitivityConverter = () => {
+            const [sourceGame, setSourceGame] = useState('cs2');
+            const [targetGame, setTargetGame] = useState('valorant');
+            const [sourceSens, setSourceSens] = useState('');
+            const [sourceDpi, setSourceDpi] = useState('');
+            const [targetSens, setTargetSens] = useState('');
+            const [copied, setCopied] = useState(false);
+            const resultRef = useRef(null);
+
+            const games = {
+                cs2: { name: 'CS2/CS:GO', multiplier: 1.0 },
+                valorant: { name: 'Valorant', multiplier: 0.32 },
+                fortnite: { name: 'Fortnite', multiplier: 0.022 },
+                apex: { name: 'Apex Legends', multiplier: 0.022 },
+                overwatch: { name: 'Overwatch 2', multiplier: 0.0066 }
+            };
+
+            const calculateSensitivity = useCallback(() => {
+                if (!sourceSens || !sourceDpi) return;
+
+                const sourceMultiplier = games[sourceGame].multiplier;
+                const targetMultiplier = games[targetGame].multiplier;
+                
+                const cm360Source = (360 * sourceMultiplier) / (sourceSens * sourceDpi / 400);
+                const targetSensitivity = (360 * targetMultiplier) / (cm360Source * sourceDpi / 400);
+                
+                setTargetSens(targetSensitivity.toFixed(4));
+            }, [sourceGame, targetGame, sourceSens, sourceDpi]);
+
+            useEffect(() => {
+                calculateSensitivity();
+            }, [calculateSensitivity]);
+
+            const copyToClipboard = async () => {
+                if (resultRef.current) {
+                    await navigator.clipboard.writeText(resultRef.current.textContent);
+                    setCopied(true);
+                    setTimeout(() => setCopied(false), 2000);
+                }
+            };
+
+            const swapGames = () => {
+                setSourceGame(targetGame);
+                setTargetGame(sourceGame);
+                setSourceSens(targetSens);
+                setTargetSens(sourceSens);
+            };
+
+            return (
+                <div className="min-h-screen bg-gradient-to-br from-stealth-bg via-black to-gray-900">
+                    {/* Header */}
+                    <header className="sticky top-0 z-50 backdrop-blur-md bg-black/30 border-b border-neon-cyan/20">
+                        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                            <div className="flex justify-between items-center py-4">
+                                <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-neon-cyan to-neon-purple bg-clip-text text-transparent">
+                                    🎮 Sensitivity Converter
+                                </h1>
+                                <div className="hidden md:block text-sm text-gray-400">
+                                    Perfect cross-game matching
+                                </div>
+                            </div>
+                        </div>
+                    </header>
+
+                    {/* Hero Section */}
+                    <section className="pt-20 pb-16 px-4 sm:px-6 lg:px-8">
+                        <div className="max-w-4xl mx-auto text-center">
+                            <h2 className="text-4xl md:text-6xl font-black mb-6 bg-gradient-to-r from-neon-cyan via-neon-purple to-neon-green bg-clip-text text-transparent">
+                                Convert Your Sensitivity
+                            </h2>
+                            <p className="text-xl md:text-2xl text-gray-300 mb-12 max-w-2xl mx-auto leading-relaxed">
+                                Instantly match your mouse sensitivity across your favorite FPS games. 
+                                <span className="font-bold text-neon-cyan block mt-2">No more re-learning muscle memory!</span>
+                            </p>
+                            
+                            {/* AdSense Placeholder */}
+                            <div className="bg-stealth-card p-6 rounded-2xl border border-gray-800 mb-12 max-w-2xl mx-auto">
+                                <div className="h-24 bg-gradient-to-r from-gray-800 to-gray-700 rounded-xl flex items-center justify-center text-gray-500 text-sm">
+                                    👈 Google AdSense Leaderboard (728x90) Here
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* Main Converter */}
+                    <main className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
+                        <div className="bg-stealth-card backdrop-blur-xl border border-neon-cyan/20 shadow-2xl rounded-3xl p-8 md:p-12">
+                            {/* Input Section */}
+                            <div className="grid md:grid-cols-2 gap-8 mb-8">
+                                <div>
+                                    <label className="block text-sm font-bold text-neon-cyan mb-3 uppercase tracking-wider">
+                                        From Game
+                                    </label>
+                                    <select 
+                                        value={sourceGame} 
+                                        onChange={(e) => setSourceGame(e.target.value)}
+                                        className="w-full bg-stealth-bg/50 border border-neon-cyan/30 rounded-xl px-4 py-3 text-lg font-semibold focus:ring-4 focus:ring-neon-cyan/20 focus:border-neon-cyan transition-all duration-300"
+                                    >
+                                        {Object.entries(games).map(([key, game]) => (
+                                            <option key={key} value={key}>{game.name}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                                
+                                <div>
+                                    <label className="block text-sm font-bold text-neon-cyan mb-3 uppercase tracking-wider">
+                                        Sensitivity
+                                    </label>
+                                    <input
+                                        type="number"
+                                        step="0.01"
+                                        min="0.01"
+                                        value={sourceSens}
+                                        onChange={(e) => setSourceSens(e.target.value)}
+                                        placeholder="e.g., 2.5"
+                                        className="w-full bg-stealth-bg/50 border border-neon-cyan/30 rounded-xl px-4 py-3 text-lg font-semibold focus:ring-4 focus:ring-neon-cyan/20 focus:border-neon-cyan transition-all duration-300 text-neon-green"
+                                    />
+                                </div>
+                            </div>
+
+                            {/* DPI Input */}
+                            <div className="mb-8">
+                                <label className="block text-sm font-bold text-neon-purple mb-3 uppercase tracking-wider">
+                                    Mouse DPI
+                                </label>
+                                <input
+                                    type="number"
+                                    value={sourceDpi}
+                                    onChange={(e) => setSourceDpi(e.target.value)}
+                                    placeholder="e.g., 800"
+                                    className="w-full bg-stealth-bg/50 border border-neon-purple/30 rounded-xl px-4 py-3 text-lg font-semibold focus:ring-4 focus:ring-neon-purple/20 focus:border-neon-purple transition-all duration-300 text-neon-purple"
+                                />
+                            </div>
+
+                            {/* Swap Button */}
+                            <div className="flex justify-center mb-8">
+                                <button
+                                    onClick={swapGames}
+                                    className="group relative bg-gradient-to-r from-neon-cyan to-neon-purple text-black font-bold px-8 py-3 rounded-2xl shadow-lg hover:shadow-neon-cyan/25 transform hover:scale-105 transition-all duration-300 border border-neon-cyan/50"
+                                >
+                                    ↔️ Swap Games
+                                    <div className="absolute inset-0 bg-gradient-to-r from-neon-cyan to-neon-purple rounded-2xl opacity-0 group-hover:opacity-20 transition-opacity duration-300" />
+                                </button>
+                            </div>
+
+                            {/* Target Game */}
+                            <div className="mb-8">
+                                <label className="block text-sm font-bold text-neon-green mb-3 uppercase tracking-wider">
+                                    To: {games[targetGame].name}
+                                </label>
+                                <select 
+                                    value={targetGame} 
+                                    onChange={(e) => setTargetGame(e.target.value)}
+                                    className="w-full bg-stealth-bg/50 border border-neon-green/30 rounded-xl px-4 py-3 text-lg font-semibold focus:ring-4 focus:ring-neon-green/20 focus:border-neon-green transition-all duration-300 mb-4"
+                                >
+                                    {Object.entries(games).map(([key, game]) => (
+                                        <option key={key} value={key}>{game.name}</option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            {/* Result */}
+                            <div className="relative">
+                                <label className="block text-sm font-bold text-neon-green mb-4 uppercase tracking-wider">
+                                    Recommended Sensitivity
+                                </label>
+                                <div 
+                                    ref={resultRef}
+                                    className="w-full bg-gradient-to-r from-neon-green to-neon-cyan bg-clip-text text-transparent text-4xl md:text-5xl font-black text-center py-8 px-6 rounded-2xl border-4 border-neon-green/30 shadow-2xl bg-stealth-bg/30 backdrop-blur-xl"
+                                >
+                                    {targetSens || '--.--'}
+                                </div>
+                                
+                                <button
+                                    onClick={copyToClipboard}
+                                    disabled={!targetSens}
+                                    className="mt-6 w-full bg-gradient-to-r from-neon-green to-emerald-500 hover:from-emerald-500 hover:to-green-500 text-black font-bold py-4 px-8 rounded-2xl shadow-lg hover:shadow-neon-green/25 transform hover:scale-105 transition-all duration-300 border border-neon-green/50 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                                >
+                                    {copied ? '✅ Copied!' : '📋 Copy to Clipboard'}
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* AdSense Placeholder */}
+                        <div className="mt-16 bg-stealth-card p-6 rounded-2xl border border-gray-800">
+                            <div className="h-24 md:h-32 bg-gradient-to-r from-gray-800 to-gray-700 rounded-xl flex items-center justify-center text-gray-500 text-sm md:text-base">
+                                👈 Google AdSense Rectangle (300x250) Here
+                            </div>
+                        </div>
+                    </main>
+
+                    {/* Footer */}
+                    <footer class="bg-stealth-card/50 backdrop-blur-md border-t border-neon-cyan/10 mt-20">
+                        <div class="max-w-4xl mx-auto px-4 py-12 text-center">
+                            <p class="text-gray-400 text-sm mb-4">
+                                Built for gamers by gamers ⚡ Instant cross-game sensitivity conversion
+                            </p>
+                            <p class="text-xs text-gray-500">
+                                Calculations based on standard 360° cm/360 matching. Results may vary slightly by game settings.
+                            </p>
+                        </div>
+                    </footer>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<GamingSensitivityConverter />);
+    </script>
+</body>
+  </html>
